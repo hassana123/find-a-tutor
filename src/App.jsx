@@ -1,34 +1,34 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { useState, useEffect } from 'react'
+import {Routes, Route} from "react-router-dom";
+import LandingPage from './pages/LandingPage';
+import SignUp from './pages/SignUp';
+import LoginPage from './pages/LoginPage';
+import Dashboard from './pages/Dashboard';
+import TutorDashboard from './pages/tutorDashboard/TutorDashboard';
+import TutorApplicationForm from './pages/TutorApplicationForm';
+import Tutor from './pages/Tutor';
+import AllTutors from './pages/AllTutors';
+import { UserProvider } from './UserContext';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import Sessions from './pages/Sessions';
+import TutorSessions from './pages/tutorDashboard/TutorSessions';
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    return (
+    <UserProvider>
+     <Routes>
+      <Route exact path='/' element={<LandingPage/>}/>
+      <Route  path='/sign-up' element={<SignUp/>}/>
+      <Route  path='/login' element={<LoginPage/>}/>
+      <Route  path='/user-dashboard' element={<Dashboard/>}/>
+      <Route  path='/tutor-dashboard' element={<TutorDashboard/>}/>
+      <Route path='/tutor-application' element={<TutorApplicationForm/>}/>
+      <Route path='/tutor/:id' element={<Tutor/>}/>
+      <Route path='/tutors' element={<AllTutors/>}/>
+      <Route  path='/admin-Dashboard' element={<AdminDashboard/>}/>
+      <Route path="/user-sessions" element={<Sessions/>}/>
+      <Route path="/tutor-sessions" element={<TutorSessions/>}/>
+    </Routes> 
+    </UserProvider>
   )
 }
 
