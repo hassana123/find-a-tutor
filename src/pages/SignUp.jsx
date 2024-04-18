@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
+import Navbar from '../components/Navbar';
 import { useDispatch, useSelector } from 'react-redux';
 import group from "../assets/Group4.png";
 import { auth, db } from '../../firebase';
@@ -75,6 +76,8 @@ const SignUp = () => {
   };
 
   return (
+  <>
+  <Navbar/>
     <section className='bg-[#CF3D4B] my-10 w-[98%] md:w-[75%] lg:w-[65%]  mx-auto flex'>
       <div className='bg-[#CF3D4B] w-[40%]  hidden md:block inline-block'>
         <img src={group} alt="" />
@@ -102,6 +105,7 @@ const SignUp = () => {
         <small className='block text-center text-[14px] text-[#7D7D7D]'>Already have an Account? <NavLink className="text-[#cf3d4b]" to="/login">Login</NavLink></small>
       </div>
     </section>
+  </>
   );
 }
 

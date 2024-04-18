@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import DashboardLayout from '../components/DashboardLayout';
-import { collection, query, where, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, query, where, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import {  BiFilterAlt,  } from 'react-icons/bi';
 import { FiClock, FiCalendar, FiTrash, FiXCircle} from "react-icons/fi";
@@ -50,74 +50,80 @@ const Sessions = () => {
   const handleDelete = async (sessionId) => {
     try {
       await deleteDoc(doc(db, `users/${userId}/sessions`, sessionId));
-      // Remove the session from the state
       setSessions(sessions.filter(session => session.id !== sessionId));
     } catch (error) {
       console.error('Error deleting session:', error);
     }
   };
 
-  const handleCancel = async (sessionId) => {
-    // Implement cancel logic
+  const handleCancel = async (sessionId, tutorId) => {
+    try {
+      await updateDoc(doc(db, `users/${userId}/sessions`, sessionId), { status: 'canceled' });
+      await updateDoc(doc(db, `tutors/${tutorId}/sessions`, sessionId), { status: 'canceled' });
+      console.log("done");
+    setSessions(sessions.map(session => session.id === sessionId ? { ...session, status: 'canceled' } : session));
+  } catch (error) {
+    console.error('Error rejecting session:', error);
+  }
     console.log('Cancel session:', sessionId);
   };
-   // Convert to ISO string
-
-  let gapi = window.gapi
-  const CLIENT_ID ="429285555541-ij2ckgtc0up7j48qhqj1i3f378hsag47.apps.googleusercontent.com"
-  const API_KEY = "AIzaSyB7MNcEaDwxIHJY_HOMu7Mul8Dtk8EOKpQ"
-  const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'
-  const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
-  const handleSetReminder = async (session) => {
-  const startDateTime = new Date(`${session.date}T${session.time}`);
-  const endDateTime = new Date(startDateTime);
-  endDateTime.setDate(startDateTime.getDate() + 1); // Add 1 day
-  const endDateTimeString = endDateTime.toISOString();
-    gapi.load('client:auth2', ()=>{
-      console.log("done");
-      gapi.client.init({
-        apiKey:API_KEY,
-        clientId:CLIENT_ID,
-        discoveryDocs:DISCOVERY_DOC,
-        scope:SCOPES,
-      })
-      gapi.client.load("calendar", "v3", ()=>{
-        console.log("done");
-      })
-      gapi.auth2.getAuthInstance().signIn()
-      .then(()=>{
-        const event = {
-          summary: `Session with ${session.tutorName}`, // Event summary
-          description: `peer tutor session with ${session.tutorName} to master ${session.course}`, // Event description
-          start: {
-            dateTime: startDateTime.toISOString(), // Event start datetime
-            timeZone: 'Africa/Lagos', // Nigerian time zone
-          },
-          end: {
-            dateTime: endDateTimeString, // Event end datetime
-            timeZone: 'Africa/Lagos', // Nigerian time zone
-          },
-          recurrence:[
-            "RRULE:FREQ=DAILY;COUNT=2"
-          ],
-          reminders:{
-            useDefault:false,
-           overrides:[
-            {method:"popup:", minutes:10}
-           ]
-          }
-        };
-        const request = gapi.client.calendar.events.insert({
-          calendarId:"primary",
-          resource:event,
-        })
-        request.execute(event=>{
-          window.open(event.htmlLink)
-        })
-      })
-    })
-    console.log('Set reminder for session:', session);
-  };
+  
+ 
+  // let gapi = window.gapi
+  // const CLIENT_ID ="429285555541-ij2ckgtc0up7j48qhqj1i3f378hsag47.apps.googleusercontent.com"
+  // const API_KEY = "AIzaSyB7MNcEaDwxIHJY_HOMu7Mul8Dtk8EOKpQ"
+  // const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'
+  // const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+  // const handleSetReminder = async (session) => {
+  // const startDateTime = new Date(`${session.date}T${session.time}`);
+  // const endDateTime = new Date(startDateTime);
+  // endDateTime.setDate(startDateTime.getDate() + 1); // Add 1 day
+  // const endDateTimeString = endDateTime.toISOString();
+  //   gapi.load('client:auth2', ()=>{
+  //     console.log("done");
+  //     gapi.client.init({
+  //       apiKey:API_KEY,
+  //       clientId:CLIENT_ID,
+  //       discoveryDocs:DISCOVERY_DOC,
+  //       scope:SCOPES,
+  //     })
+  //     gapi.client.load("calendar", "v3", ()=>{
+  //       console.log("done");
+  //     })
+  //     gapi.auth2.getAuthInstance().signIn()
+  //     .then(()=>{
+  //       const event = {
+  //         summary: `Session with ${session.tutorName}`, // Event summary
+  //         description: `peer tutor session with ${session.tutorName} to master ${session.course}`, // Event description
+  //         start: {
+  //           dateTime: startDateTime.toISOString(), // Event start datetime
+  //           timeZone: 'Africa/Lagos', // Nigerian time zone
+  //         },
+  //         end: {
+  //           dateTime: endDateTimeString, // Event end datetime
+  //           timeZone: 'Africa/Lagos', // Nigerian time zone
+  //         },
+  //         recurrence:[
+  //           "RRULE:FREQ=DAILY;COUNT=2"
+  //         ],
+  //         reminders:{
+  //           useDefault:false,
+  //          overrides:[
+  //           {method:"popup:", minutes:10}
+  //          ]
+  //         }
+  //       };
+  //       const request = gapi.client.calendar.events.insert({
+  //         calendarId:"primary",
+  //         resource:event,
+  //       })
+  //       request.execute(event=>{
+  //         window.open(event.htmlLink)
+  //       })
+  //     })
+  //   })
+  //   console.log('Set reminder for session:', session);
+  // };
 
   if (loading) {
     return <p className="text-center mt-8 text-gray-700">Loading...</p>;
@@ -167,9 +173,9 @@ const Sessions = () => {
                 <div className='flex justify-between my-3'>
                 <p className="text-gray-600 ">Status: {session.status}</p>
                 <div className="flex justify-end ">
-                  <button onClick={() => handleCancel(session.id)} className="text-red-500 flex items-center gap-2">
+                 {session.status!=="rejected"? <button onClick={() => handleCancel(session.id, session.tutorId)} className="text-red-500 flex items-center gap-2">
                     <FiXCircle /> Cancel
-                  </button>
+                  </button>:""}
                 {session.status==="rejected"?  <button onClick={() => handleDelete(session.id)} className="text-red-500 flex items-center gap-2">
                     <FiTrash /> Delete
                   </button>:""}

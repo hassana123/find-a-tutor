@@ -30,7 +30,7 @@ const DashSection = () => {
 
     fetchTopTutors();
   }, []);
-console.log(topTutors);
+//console.log(topTutors);
   return (
     <section className='mx-5'>
       <h1 className='text-[18px] font-bold my-5'>Top Tutors on Tutorly</h1>

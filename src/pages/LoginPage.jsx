@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Navbar from '../components/Navbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import group from "../assets/Group4.png";
@@ -29,7 +30,7 @@ const LoginPage = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       dispatch(clearSuccess());
-    }, 3000);
+    }, 1000);
 
     return () => clearTimeout(timeout); 
   }, [success, dispatch]);
@@ -81,7 +82,9 @@ const LoginPage = () => {
   };
  
   return (
-    <section className='bg-[#CF3D4B] my-10 w-[98%] md:w-[70%] lg:w-[55%]  mx-auto flex'>
+    <>
+    <Navbar/>
+     <section className='bg-[#CF3D4B] my-10 w-[98%] md:w-[70%] lg:w-[55%]  mx-auto flex'>
       <div className='bg-[#CF3D4B] hidden md:block w-[40%] inline-block'>
         <img src={group} alt="" />
       </div>
@@ -104,7 +107,9 @@ const LoginPage = () => {
         <small className='block text-center text-[14px] text-[#7D7D7D]'>New Here? <NavLink className="text-[#cf3d4b]" to="/sign-up">Sign Up</NavLink></small>
       </div>
     </section>
-  );
+
+    </>
+     );
 }
 
 export default LoginPage;

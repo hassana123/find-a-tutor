@@ -5,13 +5,31 @@ import { IoEllipsisVertical } from 'react-icons/io5';
 import { BiEdit, BiTrash  } from 'react-icons/bi';
 import {RiLogoutCircleLine,  RiHome4Line, RiGroup2Line, RiTimer2Line, RiInbox2Line, RiStarLine} from "react-icons/ri"
 import star from "../assets/Star.svg";
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import image from "../assets/Ellipse1.png"
 const SideNavTutor = ({show}) => {
   const [open, setOpen] =useState(false);
-
+const navigate = useNavigate()
   const user = useContext(UserContext);
   //console.log(user);
+  const getGreetingMessage = () => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) {
+      return 'Good Morning';
+    } else if (hour >= 12 && hour < 18) {
+      return 'Good Afternoon';
+    } else {
+      return 'Good Evening';
+    }
+  };
+  const handleLogout = () => {
+    navigate('/');
+    console.log("out");
+    // Remove user data from local storage
+    localStorage.removeItem('userTutorly');
+    sessionStorage.removeItem('userTutorly');
+    
+  };
   return (
     <>
     {/**destop nav */}
@@ -32,7 +50,9 @@ const SideNavTutor = ({show}) => {
      <NavLink style={({isActive})=>{
       return isActive?{color:"#F13E3E"}:{}
     }} to="logout" className=" my-5 hover:text-red-600 flex gap-2 items-center"><RiLogoutCircleLine/>Logout</NavLink>
-    <NavLink className="my-5 hover:text-red-600 flex gap-2 items-center" to=""><BiEdit/> Edit Profile</NavLink>
+    <NavLink style={({isActive})=>{
+        return isActive?{color:"#F13E3E"}:{}
+      }} className="my-5 hover:text-red-600 flex gap-2 items-center" to="/manage-profile"><BiEdit/> Manage Profile</NavLink>
     </div>
     ):(
       <></>
@@ -55,21 +75,23 @@ const SideNavTutor = ({show}) => {
     </div>
     <div className='my-10 w-[90%] shadow-md mx-auto text-center'>
       <img className='mx-auto my-5' src={image} alt="" />
-      <h1 className='font-bold text-[18px] mb-1'>Good Morning {user?.name}</h1>
+      <h1 className='font-bold text-[18px] mb-1'>{getGreetingMessage()} {user?.name}</h1>
       <p className='text-[12px] mb-5'>Check Your Sessions and Accept your Bookings  </p>
       <div className='flex justify-center gap-5'>
-        <NavLink  className="border p-3 rounded-[50%]" to="" ><FiLogOut/></NavLink>
-        <NavLink className="border p-3 rounded-[50%]" to=""><BiEdit/></NavLink>
-        <NavLink className="border p-3 rounded-[50%]" to=""><BiTrash/></NavLink>
+        <button onClick={handleLogout} className="border p-3 block rounded-[50%]" ><FiLogOut/></button>
+        <NavLink style={({isActive})=>{
+        return isActive?{color:"#F13E3E"}:{}
+      }} className="border p-3 rounded-[50%]" to="/manage-profile"><BiEdit/></NavLink>
+        <NavLink style={({isActive})=>{
+        return isActive?{color:"#F13E3E"}:{}
+      }} className="border p-3 rounded-[50%]" to=""><BiTrash/></NavLink>
       </div>
     </div>
     <div className='mx-5 space-y-5'>
       <NavLink style={({isActive})=>{
       return isActive?{color:"#F13E3E"}:{}
     }} to="settings" className=" hover:text-red-600 flex gap-2 items-center"><FiSettings/> Settings</NavLink>
-      <NavLink style={({isActive})=>{
-      return isActive?{color:"#F13E3E"}:{}
-    }} to="logout" className=" hover:text-red-600 flex gap-2 items-center"><RiLogoutCircleLine/>Logout</NavLink>
+      <button onClick={handleLogout} className=" hover:text-red-600 flex gap-2 items-center"><RiLogoutCircleLine/>Logout</button>
     </div>
     </nav>
 {/**mobile Nav */}
@@ -101,21 +123,23 @@ const SideNavTutor = ({show}) => {
     </div>
     <div className='my-10 w-[90%] shadow-md mx-auto text-center'>
       <img className='mx-auto my-5' src={image} alt="" />
-      <h1 className='font-bold text-[18px] mb-1'>Good Morning {user?.name}</h1>
+      <h1 className='font-bold text-[18px] mb-1'>{getGreetingMessage()}, {user?.name}</h1>
       <p className='text-[12px] mb-5'> Check Your Sessions and Accept your Bookings </p>
       <div className='flex justify-center gap-5'>
-        <NavLink  className="border p-3 rounded-[50%]" to="" ><FiLogOut/></NavLink>
-        <NavLink className="border p-3 rounded-[50%]" to=""><BiEdit/></NavLink>
-        <NavLink className="border p-3 rounded-[50%]" to=""><BiTrash/></NavLink>
+        <button onClick={handleLogout} className="border p-3 block rounded-[50%]" ><FiLogOut/></button>
+        <NavLink style={({isActive})=>{
+        return isActive?{color:"#F13E3E"}:{}
+      }} className="border p-3 block rounded-[50%]" to="/manage-profile"><BiEdit/></NavLink>
+        <NavLink style={({isActive})=>{
+        return isActive?{color:"#F13E3E"}:{}
+      }} className="border p-3 rounded-[50%]" to="/delete-account"><BiTrash/></NavLink>
       </div>
     </div>
     <div className='mx-5 space-y-5'>
       <NavLink style={({isActive})=>{
       return isActive?{color:"#F13E3E"}:{}
     }} to="settings" className=" hover:text-red-600 flex gap-2 items-center"><FiSettings/> Settings</NavLink>
-      <NavLink style={({isActive})=>{
-      return isActive?{color:"#F13E3E"}:{}
-    }} to="logout" className=" hover:text-red-600 flex gap-2 items-center"><RiLogoutCircleLine/>Logout</NavLink>
+      <button onClick={handleLogout} className=" hover:text-red-600 flex gap-2 items-center"><RiLogoutCircleLine/>Logout</button>
     </div>
     </nav>
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import TutorDashboardLayout from '../../components/TutorDashboardLayou';
-import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
+import DashboardLayout from '../../components/DashboardLayout';
+import { collection, getDocs, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import { FiClock, FiCalendar, FiTrash, FiCheckCircle, FiXCircle } from "react-icons/fi";
 import requireAuth from '../../requireAuth';
@@ -61,7 +61,7 @@ const TutorSessions = () => {
   const handleReject = async (sessionId, userId) => {
     try {
         await updateDoc(doc(db, `tutors/${tutorId}/sessions`, sessionId), { status: 'rejected' });
-        await updateDoc(doc(db, `users/${userId}sessions`, sessionId), { status: 'rejected' });
+        await updateDoc(doc(db, `users/${userId}/sessions`, sessionId), { status: 'rejected' });
         console.log("done");
       setSessions(sessions.map(session => session.id === sessionId ? { ...session, status: 'rejected' } : session));
     } catch (error) {
@@ -88,7 +88,7 @@ const TutorSessions = () => {
   }
 
   return (
-    <TutorDashboardLayout>
+    <DashboardLayout>
       <div className="mx-5">
         <h1 className="text-3xl font-semibold mb-5">Your Sessions</h1>
         <div className="mb-5 flex gap-2">
@@ -135,7 +135,7 @@ const TutorSessions = () => {
           ))}
         </div>
       </div>
-    </TutorDashboardLayout>
+    </DashboardLayout>
   );
 };
 

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../../firebase'; // Import Firebase db instance
-import { collection, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, setDoc, addDoc, updateDoc } from 'firebase/firestore';
 import { AiOutlineClose } from 'react-icons/ai';
+import { v4 as uuid } from "uuid";
 import emailjs from "@emailjs/browser"
-function AdminApplications() {
+import AdminDashboardLayout from '../../components/admin/AdminLayout';
+function Applications() {
   const [applications, setApplications] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
   const [accepting, setAccepting] = useState(false)
@@ -36,7 +38,7 @@ function AdminApplications() {
     setSelectedApplication(null);
   };
 
-  const handleAcceptApplication = async (applicationId) => {
+  const handleAcceptApplication = async (applicationId, status) => {
     try {
       setAccepting(true)
       // Update application status to 'accepted'
@@ -49,15 +51,58 @@ function AdminApplications() {
 
       // Update user's isTutor field to true
       await updateDoc(doc(db, 'users', applicationId), { isTutor: true, applicationPending:false, status:"accepted" });
-
+      status ="accepted"
       // Create a document in tutors collection with the same id
       await setDoc(doc(db, 'tutors', applicationId), { ...applicationData });
 
       // Send acceptance email to the user
+      const websiteLink = 'https://www.example.com'; 
       const templateParams = {
         to_email: applicationData.email,
         subject: 'Congratulations! You have been selected as a tutor',
-        message: `Dear ${applicationData.name},\n\nCongratulations! You have been selected as a tutor. You can now access and manage your tutor profile.\n\nBest regards,\nThe Tutorly Team`
+        message: `Dear ${applicationData.name},\n\nWe are thrilled to inform you that you have been selected as a tutor with us. This is a significant milestone, and we congratulate you on this achievement! As a tutor, you will have the opportunity to share your knowledge and expertise, positively impacting the lives of many learners.\n\nYour journey as a tutor begins now. We encourage you to login to your account to explore options available to you. From managing your profile to scheduling sessions, our platform offers a seamless experience designed to support your tutoring journey.\n\nThank you for choosing to be a part of our community. We look forward to seeing you thrive as a tutor!\n\nBest regards,\nThe Tutorly Team \n\n Login to your account: <a href="${websiteLink}">Tutorly</a>`,
+      };
+      
+    //await emailjs.send('service_co0qdum', 'template_fmcumye', templateParams, 'fMDmIeULGLnsvqA7f');
+    emailjs.init("fMDmIeULGLnsvqA7f");
+    emailjs.send("service_co0qdum","template_fmcumye", templateParams)
+    .then((response)=>{
+      console.log(response);
+    })
+    .catch((error)=>{
+      console.log(error);
+    })
+      console.log('Application Accepted successfully');
+      setAccepting(false);
+    } catch (error) {
+      console.error('Error accepting application: ', error);
+      setAccepting(false);
+
+    }
+  };
+
+  const handleRejectApplication =  async (applicationId, status) => {
+    try {
+      setAccepting(true)
+      // Update application status to 'accepted'
+      await updateDoc(doc(db, 'applications', applicationId), { status: 'rejected', isPending:false, });
+
+      // Fetch the user that applied for the application
+      const applicationDocRef =  doc(db, 'applications', applicationId);
+      const applicationDoc = await getDoc(applicationDocRef)
+      const applicationData = applicationDoc.data();
+
+      // Update user's isTutor field to true
+      await updateDoc(doc(db, 'users', applicationId), { isTutor: true, applicationPending:false, status:"rejected" });
+      status ="rejected"
+
+     ;
+
+      // Send acceptance email to the user
+      const templateParams = {
+        to_email: applicationData.email,
+        subject: 'Tutor Application Status Update',
+        message: `Dear ${applicationData.name},\n\nWe regret to inform you that your tutor application has been rejected. Thank you for your interest in becoming a tutor with us.\n\nBest regards,\nThe Tutorly Team`
       };
     //await emailjs.send('service_co0qdum', 'template_fmcumye', templateParams, 'fMDmIeULGLnsvqA7f');
     emailjs.init("fMDmIeULGLnsvqA7f");
@@ -68,22 +113,19 @@ function AdminApplications() {
     .catch((error)=>{
       console.log(error);
     })
-      console.log('Application accepted successfully');
+      console.log('Application Rejected successfully');
       setAccepting(false);
     } catch (error) {
-      console.error('Error accepting application: ', error);
+      console.error('Error Rejecting application: ', error);
       setAccepting(false);
 
     }
-  };
-
-  const handleRejectApplication = (applicationId) => {
-    // Implement functionality to reject the application
     console.log('Rejecting application with ID: ', applicationId);
   };
 console.log(applications);
   return (
-    <div className="mx-auto px-4 py-8">
+    <AdminDashboardLayout>
+      <div className="mx-auto px-4 py-8">
       <h2 className="text-2xl font-bold mb-4">Tutor Applications</h2>
       <div className="overflow-x-auto">
         <table className="w-full table-auto border-collapse border border-gray-200">
@@ -104,18 +146,18 @@ console.log(applications);
                 <td className="py-2 px-4 border">{application.name}</td>
                 <td className="py-2 px-4 border">{application.email}</td>
                 <td className="py-2 px-4 border">{application.department}</td>
-                <td className="py-2 px-4 border">{application.isPending ? 'Pending' : 'Accepted/Rejected'}</td>
+                <td className="py-2 px-4 border">{application.status}</td>
                 <td className="py-2 px-4 border">
                   <button onClick={() => handleViewApplication(application.id)} className="text-blue-500 hover:underline focus:outline-none">View Application</button>
                 </td>
                 <td className="py-2 px-4 border">
                   {application.isPending && (
-                    <button onClick={() => handleAcceptApplication(application.id)} className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded focus:outline-none">{accepting?"Accepting":"Accept"}</button>
+                    <button onClick={() => handleAcceptApplication(application.id, application.status)} className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded focus:outline-none">{accepting?"Accepting":"Accept"}</button>
                   )}
                 </td>
                 <td className="py-2 px-4 border">
                   {application.isPending && (
-                    <button onClick={() => handleRejectApplication(application.id)} className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded focus:outline-none">Reject</button>
+                    <button onClick={() => handleRejectApplication(application.id, application.status)} className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded focus:outline-none">Reject</button>
                   )}
                 </td>
               </tr>
@@ -143,7 +185,8 @@ console.log(applications);
         </div>
       )}
     </div>
+    </AdminDashboardLayout>
   );
 }
 
-export default AdminApplications;
+export default Applications;

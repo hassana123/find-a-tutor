@@ -6,9 +6,9 @@ import rectangle from "../assets/Rectangle.png"
 const Section = () => {
   return (
     <section className='text-[#33333]  my-10'>
-      <h1 className='text-center text-[56px] font-[700] mb-5'>Services Offered</h1>
+      <h1 className='text-center  text-[40px] font-[700] mb-5'>Services Offered</h1>
       <p className='text-[16px] text-center mb-5'>Dive into Our Range of Tailored Tutoring Solutions</p>
-      <div className='grid grid-cols-3 mx-8 gap-10'>
+      <div className='grid md:grid-cols-2 lg::grid-cols-3 mx-8 gap-10'>
       <div className='shadow-lg bg-white p-5 '>
   <img className='mx-auto my-10' src={group} alt="" />
   <h1 className='text-[22px] font-[700] mb-5'>Personalized Tutor Matching</h1>

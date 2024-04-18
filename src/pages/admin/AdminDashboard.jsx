@@ -1,11 +1,11 @@
 import React from 'react'
-import Applications from '../../components/admin/Application'
+import AdminDashboardLayout from '../../components/admin/AdminLayout';
 const AdminDashboard = () => {
   return (
-    <div>
-      <Applications/>
-    </div>
+    <AdminDashboardLayout>
+      <>HELLO </>
+    </AdminDashboardLayout>
   )
 }
 
-export default AdminDashboard
+export default AdminDashboard;

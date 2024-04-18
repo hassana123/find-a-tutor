@@ -27,7 +27,7 @@ const AllTutors = () => {
   
       fetchAllTutors();
     }, []);
-  console.log();
+  //console.log(allTutors);
     return (
         <DashboardLayout>
              <section className='mx-5'>

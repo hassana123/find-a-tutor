@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../components/DashboardLayout';
 import requireAuth from '../requireAuth';
-import { collection, doc, getDoc, addDoc, setDoc} from 'firebase/firestore';
+import { collection, doc, getDoc, addDoc, updateDoc, setDoc, serverTimestamp} from 'firebase/firestore';
 import { db } from '../../firebase';
 import { UserContext } from "../UserContext";
+import {BiMessage} from "react-icons/bi";
+import { ChatContext } from '../ChatContext';
 
 const Tutor = () => {
   const { id } = useParams();
@@ -15,15 +17,18 @@ const Tutor = () => {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
-  const [sending, setSending] = useState(false);
 
+  const { dispatch } = useContext(ChatContext);
+  const [sending, setSending] = useState(false);
+const navigate = useNavigate();
   useEffect(() => {
     const fetchTutor = async () => {
       try {
         const tutorRef = doc(db, 'tutors', id);
         const tutorDoc = await getDoc(tutorRef);
         if (tutorDoc.exists()) {
-          setTutor(tutorDoc.data());
+          setTutor( {id: tutorDoc.id,
+            ...tutorDoc.data()});
         } else {
           setError('Tutor not found');
         }
@@ -40,7 +45,6 @@ const Tutor = () => {
 
   const user = useContext(UserContext);
   const userId = user.id;
-
   const handleRequestSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -91,7 +95,17 @@ const Tutor = () => {
   if (error) {
     return <p>Error: {error}</p>;
   }
-
+  const handleChatWithTutor = (selectedTutor) => {
+    navigate(`/inbox`);
+    // Trigger handleSelect function to open chat with selected tutor
+    dispatch({ type: "CHANGE_USER", payload: {
+      uid: tutor.id,
+      displayName: tutor.name,
+      photoURL: tutor.image || "",
+      date: serverTimestamp(), // You might need to change this to the appropriate date
+    }});
+  };
+  console.log(tutor);
   return (
     <DashboardLayout>
       <div className="mx-5">
@@ -117,6 +131,8 @@ const Tutor = () => {
               <p >{tutor.experience}</p>
               <h1 className='font-bold text-[20px]'>Additional Info</h1>
               <p >{tutor.additionalInfo}</p>
+             <p>{tutor.id}</p>
+              <button onClick={()=>handleChatWithTutor(tutor)} className='bg-red-600 text-white  px-10 py-3 rounded-md flex items-center gap-2 hover:bg-red-400 '>chat with tutor<BiMessage/></button>
             </div>
             <form className='my-5 mx-6' onSubmit={handleRequestSubmit}>
               <h2 className="text-xl font-semibold mb-3">Request Session</h2>

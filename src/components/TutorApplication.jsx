@@ -1,5 +1,5 @@
 // TutorApplication.jsx
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setField, startSubmitting, submitSuccess, submitError } from '../authComponents/applicationSlice'; // Import actions from Redux slice
 import {  updateDoc, setDoc, doc, serverTimestamp } from 'firebase/firestore';
@@ -12,13 +12,18 @@ import { useNavigate, NavLink } from 'react-router-dom';
 function TutorApplication() {
   const navigate = useNavigate()
   const dispatch = useDispatch();
- const user = JSON.parse(localStorage.getItem("userTutorly")) || JSON.parse(sessionStorage.getItem("userTutorly"))
-console.log(user.uid);
-const userContext = useContext(UserContext);
+ //const userL = JSON.parse(localStorage.getItem("userTutorly")) || JSON.parse(sessionStorage.getItem("userTutorly"))
+
+const user = useContext(UserContext);
 //console.log(userContext);
   const formData = useSelector((state) => state.application);
   const [selectedCourses, setSelectedCourses] = useState([]);
 
+  useEffect(() => {
+    // Set initial name and email from user's registered data
+    dispatch(setField({ field: 'name', value: user?.name }));
+    dispatch(setField({ field: 'email', value: user?.email }));
+  }, [dispatch, user]);
   const handleChange = (e) => {
     if (e.target.name == 'image') {
       // Handle image upload
@@ -79,14 +84,14 @@ const handleSubmit = async (e) => {
     dispatch(startSubmitting());
 
     try {
-      const docRef = await setDoc(doc(db, 'applications', user.uid), {
+      const docRef = await setDoc(doc(db, 'applications', user.id), {
         ...formData,
         isPending: true,
         status:"pending",
         timestamp: serverTimestamp(),
       });
       console.log('Application submitted with ID: ');
-      await updateDoc(doc(db, 'users', user.uid), {
+      await updateDoc(doc(db, 'users', user.id), {
         applicationPending: true,
         status:"pending",
       });
@@ -100,9 +105,9 @@ const handleSubmit = async (e) => {
 //console.log(formData);
   return (
     <>
-    {formData.submitSucessState|| userContext?.applicationPending ?
+    {formData.submitSucessState|| user?.applicationPending ?
     (
-    <div className="bg-white rounded-lg shadow-lg p-8 max-w-lg mx-auto">
+    <div className="bg-white rounded-lg shadow-lg p-8 max-w-lg mx-auto my-20">
   <h2 className="text-2xl font-bold mb-4">Application Submitted Successfully</h2>
   <p className="text-lg mb-4">Thank you for applying to become a tutor with us!</p>
   <p className="mb-4">Your application has been received and will be reviewed by our team.</p>
@@ -116,11 +121,11 @@ const handleSubmit = async (e) => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="name" className="block font-semibold mb-1">Full Name</label>
-          <input type="text" name="name" value={formData.name} onChange={handleChange} className="block w-full border border-gray-300 rounded-md py-2 px-3" placeholder="Enter your full name" required />
+          <input disabled={true} type="text" name="name" value={formData.name} onChange={handleChange} className="block w-full border border-gray-300 rounded-md py-2 px-3" placeholder="Enter your full name" required />
         </div>
         <div>
           <label htmlFor="email" className="block font-semibold mb-1">Email Address</label>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} className="block w-full border border-gray-300 rounded-md py-2 px-3" placeholder="Enter your email address" required />
+          <input disabled={true} type="email" name="email" value={formData.email} onChange={handleChange} className="block w-full border border-gray-300 rounded-md py-2 px-3" placeholder="Enter your email address" required />
         </div>
         <div>
           <label htmlFor="level" className="block font-semibold mb-1">Education Level</label>
