@@ -71,9 +71,7 @@ const Input = () => {
     await updateDoc(doc(db, `/users/${data.chatUser.uid}/userChats`, data.chatUser.uid), {
       [`userInfo.lastMessage`]: lastMessageData,
     }, { merge: true });
-    await updateDoc(doc(db, `/tutors/${data.chatUser.uid}/userChats`, data.chatUser.uid), {
-      [`userInfo.lastMessage`]: lastMessageData,
-    }, { merge: true });
+    
     setText("");
     setImg(null);
   };

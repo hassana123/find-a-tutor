@@ -38,7 +38,7 @@ function Applications() {
     setSelectedApplication(null);
   };
 
-  const handleAcceptApplication = async (applicationId, status) => {
+  const handleAcceptApplication = async (applicationId) => {
     try {
       setAccepting(true)
       // Update application status to 'accepted'
@@ -51,12 +51,12 @@ function Applications() {
 
       // Update user's isTutor field to true
       await updateDoc(doc(db, 'users', applicationId), { isTutor: true, applicationPending:false, status:"accepted" });
-      status ="accepted"
+      
       // Create a document in tutors collection with the same id
       await setDoc(doc(db, 'tutors', applicationId), { ...applicationData });
 
       // Send acceptance email to the user
-      const websiteLink = 'https://www.example.com'; 
+      const websiteLink = 'https://tutor-ly.vercel.app/'; 
       const templateParams = {
         to_email: applicationData.email,
         subject: 'Congratulations! You have been selected as a tutor',
@@ -81,7 +81,7 @@ function Applications() {
     }
   };
 
-  const handleRejectApplication =  async (applicationId, status) => {
+  const handleRejectApplication =  async (applicationId) => {
     try {
       setAccepting(true)
       // Update application status to 'accepted'
@@ -94,7 +94,7 @@ function Applications() {
 
       // Update user's isTutor field to true
       await updateDoc(doc(db, 'users', applicationId), { isTutor: true, applicationPending:false, status:"rejected" });
-      status ="rejected"
+     
 
      ;
 
@@ -122,7 +122,7 @@ function Applications() {
     }
     console.log('Rejecting application with ID: ', applicationId);
   };
-console.log(applications);
+//console.log(applications);
   return (
     <AdminDashboardLayout>
       <div className="mx-auto px-4 py-8">
@@ -152,12 +152,12 @@ console.log(applications);
                 </td>
                 <td className="py-2 px-4 border">
                   {application.isPending && (
-                    <button onClick={() => handleAcceptApplication(application.id, application.status)} className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded focus:outline-none">{accepting?"Accepting":"Accept"}</button>
+                    <button onClick={() => handleAcceptApplication(application.id)} className="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded focus:outline-none">{accepting?"Accepting":"Accept"}</button>
                   )}
                 </td>
                 <td className="py-2 px-4 border">
                   {application.isPending && (
-                    <button onClick={() => handleRejectApplication(application.id, application.status)} className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded focus:outline-none">Reject</button>
+                    <button onClick={() => handleRejectApplication(application.id)} className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded focus:outline-none">Reject</button>
                   )}
                 </td>
               </tr>
@@ -167,7 +167,7 @@ console.log(applications);
       </div>
       {/* Application Details Modal */}
       {selectedApplication && (
-        <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex justify-center items-center">
+        <div className="absolute top-0 left-0 w-full   bg-gray-800 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-8 rounded-lg shadow-md max-w-md">
            <AiOutlineClose onClick={handleCloseModal} className=' float-right text-red-600 cursor-pointer' size={24} />
             <h3 className="text-xl font-semibold mb-4">Application Details</h3>

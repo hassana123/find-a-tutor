@@ -35,13 +35,13 @@ const AllTutors = () => {
         {loading ? (
       <p className="text-center mt-8 text-gray-700">Loading...</p>
         ) : (
-          <div className='md:grid my-10 justify-center  md:grid-cols-3 gap-5 lg:grid-cols-4'>
+          <div className='grid my-10 justify-center   md:grid-cols-2 gap-5 lg:grid-cols-3'>
             {allTutors.map((tutor, index) => (
-              <div className='bg-white rounded-md px-1 pt-2 pb-4 my-5 md:my-0' key={index}>
+              <div className='bg-white w-[100%] rounded-md px-1 pt-2 pb-4 my-5 md:my-0' key={index}>
                 <img src={tutor?.image || tutorI} alt="Tutor" />
                 <small className='text-[11px] bg-[rgba(241,62,62,0.2)] text-[#F13E3E] px-2 py-1 rounded-[20px] inline-block my-2'>{tutor.department}</small>
                 <h1 className='font-semibold text-[18px] mb-1'>{tutor.name}</h1>
-                <p><small className='font-semibold'>Available on:</small> <small>{tutor.availability}</small></p>
+                <p className='my-2'><small className='font-semibold'>Availability:</small> <small className='text-[12px]'>{tutor.availability}</small></p>
               
                 <p className='flex gap-3 mb-3'>
                   {tutor.courses.join(", ")}

@@ -87,7 +87,85 @@ const navigate = useNavigate();
       setError('Error creating session. Please try again.');
     }
   };
+  const handleSelect = async (selectedUser) => {
+    //check whether the group(chats in firestore) exists, if not create
+    const combinedId =
+      user.id > selectedUser.id
+        ?user.id + selectedUser.id
+        : selectedUser.id + user.id;
+        console.log(combinedId)
+    try {
+      const res = await getDoc(doc(db, "chats", combinedId));
 
+      if (!res.exists()) {
+        //create a chat in chats collection
+        await setDoc(doc(db, "chats", combinedId), { messages: [] });
+        await setDoc(doc(db, `/users/${user.id}/userChats`, user.id),{
+          "userInfo": {
+              uid: selectedUser.id,
+              displayName: selectedUser.name,
+              photoURL: selectedUser.profilePicture? selectedUser.profilePicture:"",
+              date: serverTimestamp(),
+              combinedId,
+            },
+          
+          });
+          console.log("done");
+        await setDoc(doc(db, `/users/${selectedUser.id}/userChats`, selectedUser.id),{
+          "userInfo": {
+              uid: user.id,
+              displayName: user.name,
+              photoURL:user.profilePicture ? user.profilePicture: "",
+              date: serverTimestamp(),
+              combinedId,
+            },
+           
+          });
+          console.log("done");
+          dispatch({ type: "CHANGE_USER", payload: u });
+      }
+      else{
+        await updateDoc(doc(db, `/users/${selectedUser.id}/userChats`, selectedUser.id), {
+            "userInfo": {
+              uid: user.id,
+              displayName: user.name,
+              photoURL:user.profilePicture ? user.profilePicture: "",
+              date: serverTimestamp(),
+              combinedId,
+            },
+           
+          });
+          await updateDoc(doc(db, `/users/${user.id}/userChats`, user.id), {
+              "userInfo": {
+                uid: selectedUser.id,
+                displayName: selectedUser.name,
+                photoURL: selectedUser.profilePicture? selectedUser.profilePicture:"",
+                date: serverTimestamp(),
+                combinedId,
+              },
+            
+            });
+            dispatch({ type: "CHANGE_USER", payload: u });
+      }
+    } catch (err) {
+        console.log(err);
+    }
+
+   
+   
+  };
+  const handleChatWithTutor = (selectedTutor) => {
+    handleSelect(selectedTutor)
+    navigate(`/inbox`);
+    // Trigger handleSelect function to open chat with selected tutor
+    dispatch({ type: "CHANGE_USER", payload: {
+      uid: selectedTutor.id,
+      displayName: selectedTutor.name,
+      photoURL: selectedTutor.image? selectedTutor.image : "",
+      date: serverTimestamp(), // You might need to change this to the appropriate date
+    }});
+  };
+  console.log(tutor);
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -95,24 +173,14 @@ const navigate = useNavigate();
   if (error) {
     return <p>Error: {error}</p>;
   }
-  const handleChatWithTutor = (selectedTutor) => {
-    navigate(`/inbox`);
-    // Trigger handleSelect function to open chat with selected tutor
-    dispatch({ type: "CHANGE_USER", payload: {
-      uid: tutor.id,
-      displayName: tutor.name,
-      photoURL: tutor.image || "",
-      date: serverTimestamp(), // You might need to change this to the appropriate date
-    }});
-  };
-  console.log(tutor);
   return (
     <DashboardLayout>
-      <div className="mx-5">
+      <div className="mx-1">
         <h1 className="text-2xl font-semibold mb-5">Tutor Details</h1>
         {tutor ? (
-          <div className="bg-white shadow-md p-5 grid md:grid-cols-2 rounded-md">
-            <div>
+          <>
+          <div className="bg-white shadow-md  py-5 gap-2 grid md:grid-cols-2 rounded-md">
+            <div className='mx-2'>
               <img src={tutor.image || ""} alt="Tutor" className="rounded-md mb-4" />
               <h2 className="text-xl font-semibold mb-2">{tutor.name}</h2>
               <p className="text-gray-600 mb-2">{tutor.department}</p>
@@ -123,67 +191,69 @@ const navigate = useNavigate();
                   <li key={index}>{course}</li>
                 ))}
               </ul>
+              <button onClick={()=>handleChatWithTutor(tutor)} className='mt-10 bg-red-600 text-white  px-10 py-3 rounded-md flex items-center gap-2 hover:bg-red-400 '>chat with tutor<BiMessage/></button>
             </div>
-            <div className='text-[18px] space-y-3'>
+            <div className='text-[16px] space-y-3'>
               <h1 className='font-bold text-[20px]'>Bio</h1>
               <p>{tutor.bio}</p>
               <h1 className='font-bold text-[20px]'>Experience</h1>
               <p >{tutor.experience}</p>
               <h1 className='font-bold text-[20px]'>Additional Info</h1>
               <p >{tutor.additionalInfo}</p>
-             <p>{tutor.id}</p>
-              <button onClick={()=>handleChatWithTutor(tutor)} className='bg-red-600 text-white  px-10 py-3 rounded-md flex items-center gap-2 hover:bg-red-400 '>chat with tutor<BiMessage/></button>
-            </div>
-            <form className='my-5 mx-6' onSubmit={handleRequestSubmit}>
-              <h2 className="text-xl font-semibold mb-3">Request Session</h2>
-              <div className="mb-4">
-                <label htmlFor="requestMessage" className="block mb-1 font-semibold">Request Message <small>(i.e intruduce yourself)</small></label>
-                <textarea
-                  id="requestMessage"
-                  value={requestMessage}
-                  onChange={(e) => setRequestMessage(e.target.value)}
-                  placeholder="Type your request message..."
-                  className="w-full p-2 border rounded-md"
-                  rows="4"
-                ></textarea>
-              </div>
-              <div className="mb-4">
-                <label htmlFor="selectedCourse" className="block mb-1 font-semibold">Select Course <small>(course you need help with)</small></label>
-                <select
-                  id="selectedCourse"
-                  value={selectedCourse}
-                  onChange={(e) => setSelectedCourse(e.target.value)}
-                  className="w-full p-2 border rounded-md"
-                >
-                  <option value="">Select Course</option>
-                  {tutor.courses.map((course, index) => (
-                    <option key={index} value={course}>{course}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="mb-4">
-                <label htmlFor="selectedDate" className="block mb-1 font-semibold">Date <small>(Day you want the tutorial to hold)</small></label>
-                <input
-                  id="selectedDate"
-                  type="date"
-                  value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full p-2 border rounded-md"
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="selectedTime" className="block mb-1 font-semibold">Time <small>(preffered time for the Tutorial)</small></label>
-                <input
-                  id="selectedTime"
-                  type="time"
-                  value={selectedTime}
-                  onChange={(e) => setSelectedTime(e.target.value)}
-                  className="w-full p-2 border rounded-md"
-                />
-              </div>
-              <button type="submit" className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">{sending ? "Sending Request...." : "Send Request"}</button>
-            </form>
+             {/* <p>{tutor.id}</p> */}
           </div>
+            
+          </div>
+          <form className='my-5 mx-6 w-[80%]' onSubmit={handleRequestSubmit}>
+          <h2 className="text-xl font-semibold mb-3">Request Session</h2>
+          <div className="mb-4">
+            <label htmlFor="requestMessage" className="block mb-1 font-semibold">Request Message <small>(i.e intruduce yourself)</small></label>
+            <textarea
+              id="requestMessage"
+              value={requestMessage}
+              onChange={(e) => setRequestMessage(e.target.value)}
+              placeholder="Type your request message..."
+              className="w-full p-2 border rounded-md"
+              rows="4"
+            ></textarea>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="selectedCourse" className="block mb-1 font-semibold">Select Course <small>(course you need help with)</small></label>
+            <select
+              id="selectedCourse"
+              value={selectedCourse}
+              onChange={(e) => setSelectedCourse(e.target.value)}
+              className="w-full p-2 border rounded-md"
+            >
+              <option value="">Select Course</option>
+              {tutor.courses.map((course, index) => (
+                <option key={index} value={course}>{course}</option>
+              ))}
+            </select>
+          </div>
+          <div className="mb-4">
+            <label htmlFor="selectedDate" className="block mb-1 font-semibold">Date <small>(Day you want the tutorial to hold)</small></label>
+            <input
+              id="selectedDate"
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="selectedTime" className="block mb-1 font-semibold">Time <small>(preffered time for the Tutorial)</small></label>
+            <input
+              id="selectedTime"
+              type="time"
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+              className="w-full p-2 border rounded-md"
+            />
+          </div>
+          <button type="submit" className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600">{sending ? "Sending Request...." : "Send Request"}</button>
+        </form>
+          </>
         ) : (
           <p>No tutor found with ID: {id}</p>
         )}
