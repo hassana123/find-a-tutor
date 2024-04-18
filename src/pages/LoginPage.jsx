@@ -63,12 +63,13 @@ const LoginPage = () => {
       if (userDoc.exists) {
         const userData = userDoc.data();
         dispatch(setUser(userData));
-        if (userData.isTutor) {
-          navigate("/tutor-dashboard");
-          return;
-        } else {
-          navigate("/user-dashboard");
-        }
+        navigate("/user-dashboard");
+        // if (userData.isTutor) {
+        //   navigate("/tutor-dashboard");
+        //   return;
+        // } else {
+        //   navigate("/user-dashboard");
+        // }
       }
       dispatch(setUser(userCred.uid));
       dispatch(setSuccess("Login Sucessfull"));

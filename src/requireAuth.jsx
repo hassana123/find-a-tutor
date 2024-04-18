@@ -25,6 +25,7 @@ function requireAuth(WrappedComponent, isTutorDashboard = false) {
                     if(user){
                         setUserDataFetched(true);
                         setLoading(false);
+                        return;
                     }
                    
                     
