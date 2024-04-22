@@ -85,7 +85,7 @@ const Search = () => {
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
         await setDoc(doc(db, `/users/${user.id}/userChats`, user.id),{
           "userInfo": {
-              uid: selectedUser.id,
+              id: selectedUser.id,
               displayName: selectedUser.name,
               photoURL: selectedUser.profilePicture? selectedUser.profilePicture:"",
               date: serverTimestamp(),
@@ -96,7 +96,7 @@ const Search = () => {
           console.log("done");
         await setDoc(doc(db, `/users/${selectedUser.id}/userChats`, selectedUser.id),{
           "userInfo": {
-              uid: user.id,
+              id: user.id,
               displayName: user.name,
               photoURL:user.profilePicture ? user.profilePicture: "",
               date: serverTimestamp(),
@@ -105,12 +105,12 @@ const Search = () => {
            
           });
           console.log("done");
-          dispatch({ type: "CHANGE_USER", payload: u });
-      }
+          dispatch({ type: "CHANGE_USER", payload: selectedUser });
+     }
       else{
         await updateDoc(doc(db, `/users/${selectedUser.id}/userChats`, selectedUser.id), {
             "userInfo": {
-              uid: user.id,
+              id: user.id,
               displayName: user.name,
               photoURL:user.profilePicture ? user.profilePicture: "",
               date: serverTimestamp(),
@@ -120,7 +120,7 @@ const Search = () => {
           });
           await updateDoc(doc(db, `/users/${user.id}/userChats`, user.id), {
               "userInfo": {
-                uid: selectedUser.id,
+                id: selectedUser.id,
                 displayName: selectedUser.name,
                 photoURL: selectedUser.profilePicture? selectedUser.profilePicture:"",
                 date: serverTimestamp(),
@@ -128,7 +128,7 @@ const Search = () => {
               },
             
             });
-            dispatch({ type: "CHANGE_USER", payload: u });
+            dispatch({ type: "CHANGE_USER", payload: selectedUser});
       }
     } catch (err) {
         console.log(err);

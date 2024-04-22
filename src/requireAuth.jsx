@@ -5,6 +5,8 @@ import { UserContext } from './UserContext';
 function requireAuth(WrappedComponent, isTutorDashboard = false) {
     return function AuthComponents(props) {  
         const user = useContext(UserContext);
+//        const loading = useSelector((state) => state.auth.loading);
+
         const navigate = useNavigate();
         const [loading, setLoading] = useState(true);
         const [userDataFetched, setUserDataFetched] = useState(false); // Track whether user data has been fetched
@@ -17,6 +19,7 @@ function requireAuth(WrappedComponent, isTutorDashboard = false) {
                    
                     if (!userDeet) {
                         navigate("/login");
+                        setLoading(false);
                         return;
                     }
                     
@@ -31,6 +34,8 @@ function requireAuth(WrappedComponent, isTutorDashboard = false) {
                     
                     if (isTutorDashboard && !user?.isTutor) {
                         navigate("/user-Dashboard");
+                        setUserDataFetched(true)
+                        setLoading(false);
                         return;
                     }
                 } catch (error) {
@@ -40,9 +45,9 @@ function requireAuth(WrappedComponent, isTutorDashboard = false) {
             };
 
             checkAuth();
-        }, [navigate, isTutorDashboard, user, userDeet]); // Add userDB to dependencies
+        }, [navigate, isTutorDashboard, user, userDeet]); 
 
-        // Check loading and userDataFetched states before rendering
+
         if (loading || !userDataFetched) {
             return <p className="text-center mt-8 text-gray-700">Loading...</p>;
         } else {

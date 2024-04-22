@@ -102,7 +102,7 @@ const navigate = useNavigate();
         await setDoc(doc(db, "chats", combinedId), { messages: [] });
         await setDoc(doc(db, `/users/${user.id}/userChats`, user.id),{
           "userInfo": {
-              uid: selectedUser.id,
+              id: selectedUser.id,
               displayName: selectedUser.name,
               photoURL: selectedUser.profilePicture? selectedUser.profilePicture:"",
               date: serverTimestamp(),
@@ -113,7 +113,7 @@ const navigate = useNavigate();
           console.log("done");
         await setDoc(doc(db, `/users/${selectedUser.id}/userChats`, selectedUser.id),{
           "userInfo": {
-              uid: user.id,
+              id: user.id,
               displayName: user.name,
               photoURL:user.profilePicture ? user.profilePicture: "",
               date: serverTimestamp(),
@@ -122,12 +122,12 @@ const navigate = useNavigate();
            
           });
           console.log("done");
-          dispatch({ type: "CHANGE_USER", payload: u });
+          dispatch({ type: "CHANGE_USER", payload: selectedUser });
       }
       else{
         await updateDoc(doc(db, `/users/${selectedUser.id}/userChats`, selectedUser.id), {
             "userInfo": {
-              uid: user.id,
+              id: user.id,
               displayName: user.name,
               photoURL:user.profilePicture ? user.profilePicture: "",
               date: serverTimestamp(),
@@ -137,7 +137,7 @@ const navigate = useNavigate();
           });
           await updateDoc(doc(db, `/users/${user.id}/userChats`, user.id), {
               "userInfo": {
-                uid: selectedUser.id,
+                id: selectedUser.id,
                 displayName: selectedUser.name,
                 photoURL: selectedUser.profilePicture? selectedUser.profilePicture:"",
                 date: serverTimestamp(),
@@ -145,7 +145,7 @@ const navigate = useNavigate();
               },
             
             });
-            dispatch({ type: "CHANGE_USER", payload: u });
+            dispatch({ type: "CHANGE_USER", payload: selectedUser });
       }
     } catch (err) {
         console.log(err);
@@ -159,7 +159,7 @@ const navigate = useNavigate();
     navigate(`/inbox`);
     // Trigger handleSelect function to open chat with selected tutor
     dispatch({ type: "CHANGE_USER", payload: {
-      uid: selectedTutor.id,
+      id: selectedTutor.id,
       displayName: selectedTutor.name,
       photoURL: selectedTutor.image? selectedTutor.image : "",
       date: serverTimestamp(), // You might need to change this to the appropriate date

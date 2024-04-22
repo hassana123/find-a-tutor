@@ -6,6 +6,8 @@ import { FiClock, FiCalendar, FiTrash, FiCheckCircle, FiXCircle } from "react-ic
 import requireAuth from '../../requireAuth';
 import { UserContext } from "../../UserContext";
 import {BiFilterAlt} from"react-icons/bi"
+import emailjs from "@emailjs/browser";
+
 
 const TutorSessions = () => {
   const [sessions, setSessions] = useState([]);
@@ -46,12 +48,30 @@ const TutorSessions = () => {
   const handleFilterChange = (selectedFilter) => {
     setFilter(selectedFilter);
   };
-
+  const sendEmail = async (templateParams) => {
+    try {
+      emailjs.init("fMDmIeULGLnsvqA7f");
+    emailjs.send("service_co0qdum","template_fmcumye", templateParams)
+     console.log("Email sent successfully");
+    } catch (error) {
+      console.error("Error sending email:", error);
+    }
+  };
   const handleAccept = async (sessionId, userId) => {
     try {
       await updateDoc(doc(db, `tutors/${tutorId}/sessions`, sessionId), { status: 'accepted' });
       await updateDoc(doc(db, `users/${userId}/sessions`, sessionId), { status: 'accepted' });
       console.log("done");
+
+      // Send acceptance email to the user
+      const session = sessions.find(session => session.id === sessionId);
+      const templateParams = {
+        to_email: session.tuteeEmail,
+        subject: 'Session Request Accepted',
+        message: `Dear ${session.tutee},\n\nYour session request has been accepted. Please log in to your account to view the details.\n\nBest regards,\nThe Tutorly Team`
+      };
+      await sendEmail(templateParams);
+
       setSessions(sessions.map(session => session.id === sessionId ? { ...session, status: 'accepted' } : session));
     } catch (error) {
       console.error('Error accepting session:', error);
@@ -60,15 +80,24 @@ const TutorSessions = () => {
 
   const handleReject = async (sessionId, userId) => {
     try {
-        await updateDoc(doc(db, `tutors/${tutorId}/sessions`, sessionId), { status: 'rejected' });
-        await updateDoc(doc(db, `users/${userId}/sessions`, sessionId), { status: 'rejected' });
-        console.log("done");
+      await updateDoc(doc(db, `tutors/${tutorId}/sessions`, sessionId), { status: 'rejected' });
+      await updateDoc(doc(db, `users/${userId}/sessions`, sessionId), { status: 'rejected' });
+      console.log("done");
+
+      // Send rejection email to the user
+      const session = sessions.find(session => session.id === sessionId);
+      const templateParams = {
+        to_email: session.email,
+        subject: 'Session Request Rejected',
+        message: `Dear ${session.tutee},\n\nWe regret to inform you that your session request has been rejected.\n\nBest regards,\nThe Tutorly Team`
+      };
+      await sendEmail(templateParams);
+
       setSessions(sessions.map(session => session.id === sessionId ? { ...session, status: 'rejected' } : session));
     } catch (error) {
       console.error('Error rejecting session:', error);
     }
   };
-
   const handleDelete = async (sessionId) => {
     try {
       await deleteDoc(doc(db, `tutors/${tutorId}/sessions`, sessionId));
@@ -86,7 +115,7 @@ const TutorSessions = () => {
   if (error) {
     return <p className="text-center mt-8 text-red-500">Error: {error}</p>;
   }
-
+console.log(sessions)
   return (
     <DashboardLayout>
       <div className="mx-5">
@@ -117,10 +146,10 @@ const TutorSessions = () => {
                   <div className="flex gap-3">
                     {session.status === 'pending' && (
                       <>
-                        <button onClick={() => handleAccept(session.id, session.userId)} className="bg-green-500 text-white px-3 py-2 rounded-md flex items-center gap-2">
+                        <button onClick={() => handleAccept(session.id, session.tuteeId)} className="bg-green-500 text-white px-3 py-2 rounded-md flex items-center gap-2">
                           <FiCheckCircle /> Accept
                         </button>
-                        <button onClick={() => handleReject(session.id, session.userId)} className="bg-red-600 flex items-center text-white rounded-md px-4 py-2 gap-2">
+                        <button onClick={() => handleReject(session.id, session.tuteeId)} className="bg-red-600 flex items-center text-white rounded-md px-4 py-2 gap-2">
                           <FiXCircle /> Reject
                         </button>
                       </>

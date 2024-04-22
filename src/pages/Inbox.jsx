@@ -6,7 +6,7 @@ import Chat from '../components/chatComponent/Chat';
 const Inbox = () => {
   return (
     <DashboardLayout>
-      <main className='flex mx-auto w-[90%] h-fit-content my-5'>
+      <main className='flex mx-auto w-[90%] h-[100vh] overflow-hidden my-2'>
       <SideBar  />
       <Chat/>
     </main>
