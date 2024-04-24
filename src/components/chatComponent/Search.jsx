@@ -86,7 +86,7 @@ const Search = () => {
         await setDoc(doc(db, `/users/${user.id}/userChats`, user.id),{
           "userInfo": {
               id: selectedUser.id,
-              displayName: selectedUser.name,
+              name: selectedUser.name,
               photoURL: selectedUser.profilePicture? selectedUser.profilePicture:"",
               date: serverTimestamp(),
               combinedId,
@@ -97,7 +97,7 @@ const Search = () => {
         await setDoc(doc(db, `/users/${selectedUser.id}/userChats`, selectedUser.id),{
           "userInfo": {
               id: user.id,
-              displayName: user.name,
+              name: user.name,
               photoURL:user.profilePicture ? user.profilePicture: "",
               date: serverTimestamp(),
               combinedId,
@@ -111,7 +111,7 @@ const Search = () => {
         await updateDoc(doc(db, `/users/${selectedUser.id}/userChats`, selectedUser.id), {
             "userInfo": {
               id: user.id,
-              displayName: user.name,
+              name: user.name,
               photoURL:user.profilePicture ? user.profilePicture: "",
               date: serverTimestamp(),
               combinedId,
@@ -121,7 +121,7 @@ const Search = () => {
           await updateDoc(doc(db, `/users/${user.id}/userChats`, user.id), {
               "userInfo": {
                 id: selectedUser.id,
-                displayName: selectedUser.name,
+                name: selectedUser.name,
                 photoURL: selectedUser.profilePicture? selectedUser.profilePicture:"",
                 date: serverTimestamp(),
                 combinedId,

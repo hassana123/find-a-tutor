@@ -23,6 +23,7 @@ export const UserProvider = ({ children }) => {
 
     fetchUserData();
   }, [user, userId]);
+//  console.log(user);
 
   return (
     <UserContext.Provider value={user}>

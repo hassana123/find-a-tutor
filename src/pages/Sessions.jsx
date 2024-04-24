@@ -9,6 +9,7 @@ import CountdownTimer from '../components/CountDownTimer';
 import requireAuth from '../requireAuth';
 import emailjs from "@emailjs/browser";
 import FeedbackPrompt from '../components/FeedbackPrompt';
+//import {useSession, useSupabaseClient, useSessionContext} from "@supabase/auth-helpers-react"
 const SessionConfirmationDialog = ({ onClose, onConfirm }) => {
   return (
     <div className="session-confirmation-dialog">
@@ -27,8 +28,7 @@ const Sessions = () => {
   const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
   const [sessionHeld, setSessionHeld] = useState(null);
   const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
-
-  const [filter, setFilter] = useState("all"); // Default filter option
+   const [filter, setFilter] = useState("all"); // Default filter option
   const user = useContext(UserContext);
   const userId = user?.id;
 
@@ -150,63 +150,6 @@ const Sessions = () => {
   }
     console.log('Cancel session:', sessionId);
   };
-  
- 
-  // let gapi = window.gapi
-  // const CLIENT_ID ="429285555541-ij2ckgtc0up7j48qhqj1i3f378hsag47.apps.googleusercontent.com"
-  // const API_KEY = "AIzaSyB7MNcEaDwxIHJY_HOMu7Mul8Dtk8EOKpQ"
-  // const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'
-  // const SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
-  // const handleSetReminder = async (session) => {
-  // const startDateTime = new Date(`${session.date}T${session.time}`);
-  // const endDateTime = new Date(startDateTime);
-  // endDateTime.setDate(startDateTime.getDate() + 1); // Add 1 day
-  // const endDateTimeString = endDateTime.toISOString();
-  //   gapi.load('client:auth2', ()=>{
-  //     console.log("done");
-  //     gapi.client.init({
-  //       apiKey:API_KEY,
-  //       clientId:CLIENT_ID,
-  //       discoveryDocs:DISCOVERY_DOC,
-  //       scope:SCOPES,
-  //     })
-  //     gapi.client.load("calendar", "v3", ()=>{
-  //       console.log("done");
-  //     })
-  //     gapi.auth2.getAuthInstance().signIn()
-  //     .then(()=>{
-  //       const event = {
-  //         summary: `Session with ${session.tutorName}`, // Event summary
-  //         description: `peer tutor session with ${session.tutorName} to master ${session.course}`, // Event description
-  //         start: {
-  //           dateTime: startDateTime.toISOString(), // Event start datetime
-  //           timeZone: 'Africa/Lagos', // Nigerian time zone
-  //         },
-  //         end: {
-  //           dateTime: endDateTimeString, // Event end datetime
-  //           timeZone: 'Africa/Lagos', // Nigerian time zone
-  //         },
-  //         recurrence:[
-  //           "RRULE:FREQ=DAILY;COUNT=2"
-  //         ],
-  //         reminders:{
-  //           useDefault:false,
-  //          overrides:[
-  //           {method:"popup:", minutes:10}
-  //          ]
-  //         }
-  //       };
-  //       const request = gapi.client.calendar.events.insert({
-  //         calendarId:"primary",
-  //         resource:event,
-  //       })
-  //       request.execute(event=>{
-  //         window.open(event.htmlLink)
-  //       })
-  //     })
-  //   })
-  //   console.log('Set reminder for session:', session);
-  // };
 
   if (loading) {
     return <p className="text-center mt-8 text-gray-700">Loading...</p>;
@@ -271,6 +214,7 @@ const Sessions = () => {
     <button onClick={() => handleSetReminder(session)} className="bg-green-500 text-white px-3 py-2 rounded-md flex items-center gap-2">
       Add to Calendar
     </button>
+    {supaSession?<></>:<button onClick={()=>googleSignIn()}>Sign In with Google</button>}
   </div>
 )}
 

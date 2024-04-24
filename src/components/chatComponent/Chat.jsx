@@ -11,7 +11,7 @@ const Chat = () => {
   return (
     <div className="bg-gradient-to-br w-[70%] from-gray-200 via-gray-300 to-gray-400">
       <div className="mx-3 flex justify-between mt-3 mb-8 ">
-        <span>{data.chatUser?.displayName?data.chatUser?.displayName :data.chatUser.name}</span>
+        <span>{data.chatUser.name}</span>
         <div className="flex gap-3 items-center">
           <FiVideo className="cursor-pointer"/>
         <FiUserPlus  className="cursor-pointer"/>

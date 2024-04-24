@@ -103,7 +103,7 @@ const navigate = useNavigate();
         await setDoc(doc(db, `/users/${user.id}/userChats`, user.id),{
           "userInfo": {
               id: selectedUser.id,
-              displayName: selectedUser.name,
+              name: selectedUser.name,
               photoURL: selectedUser.profilePicture? selectedUser.profilePicture:"",
               date: serverTimestamp(),
               combinedId,
@@ -114,7 +114,7 @@ const navigate = useNavigate();
         await setDoc(doc(db, `/users/${selectedUser.id}/userChats`, selectedUser.id),{
           "userInfo": {
               id: user.id,
-              displayName: user.name,
+              name: user.name,
               photoURL:user.profilePicture ? user.profilePicture: "",
               date: serverTimestamp(),
               combinedId,
@@ -128,7 +128,7 @@ const navigate = useNavigate();
         await updateDoc(doc(db, `/users/${selectedUser.id}/userChats`, selectedUser.id), {
             "userInfo": {
               id: user.id,
-              displayName: user.name,
+              name: user.name,
               photoURL:user.profilePicture ? user.profilePicture: "",
               date: serverTimestamp(),
               combinedId,
@@ -138,7 +138,7 @@ const navigate = useNavigate();
           await updateDoc(doc(db, `/users/${user.id}/userChats`, user.id), {
               "userInfo": {
                 id: selectedUser.id,
-                displayName: selectedUser.name,
+                name: selectedUser.name,
                 photoURL: selectedUser.profilePicture? selectedUser.profilePicture:"",
                 date: serverTimestamp(),
                 combinedId,
@@ -158,12 +158,7 @@ const navigate = useNavigate();
     handleSelect(selectedTutor)
     navigate(`/inbox`);
     // Trigger handleSelect function to open chat with selected tutor
-    dispatch({ type: "CHANGE_USER", payload: {
-      id: selectedTutor.id,
-      displayName: selectedTutor.name,
-      photoURL: selectedTutor.image? selectedTutor.image : "",
-      date: serverTimestamp(), // You might need to change this to the appropriate date
-    }});
+    dispatch({ type: "CHANGE_USER", payload: selectedTutor});
   };
   console.log(tutor);
   if (loading) {

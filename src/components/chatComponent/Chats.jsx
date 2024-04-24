@@ -57,7 +57,7 @@ const Chats = () => {
           )}
             <img  alt="" />
             <div className="userChatInfo">
-              <span>{chat[1].displayName}</span>
+              <span>{chat[1].name}</span>
               <p>{chat[1].lastMessage?.text}</p>
             </div>
           </div>
