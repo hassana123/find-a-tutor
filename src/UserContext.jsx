@@ -16,9 +16,11 @@ export const UserProvider = ({ children }) => {
         const userDoc = await getDoc(doc(db, 'users', userId));
         if (userDoc.exists()) {
           setUser({ ...userDoc.data(), id: userDoc.id });
+          setLoading(false);
+          return;
         }
       }
-      setLoading(false); // Update loading state once user data is fetched
+       // Update loading state once user data is fetched
     };
 
     fetchUserData();
@@ -30,7 +32,7 @@ export const UserProvider = ({ children }) => {
       {!loading ? ( // Conditional rendering based on loading state
         children // Render children when loading is false
       ) : (
-        <p className='text-center text-[15px] my-5'>Loading...</p> // Render loading indicator when loading is true
+        <p className='text-center text-[25px] my-5'>Loading...</p> // Render loading indicator when loading is true
       )}
     </UserContext.Provider>
   );

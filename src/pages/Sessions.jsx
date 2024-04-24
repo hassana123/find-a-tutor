@@ -139,8 +139,8 @@ const Sessions = () => {
       const session = sessions.find(session => session.id === sessionId);
       const templateParams = {
         to_email: session.tutorEmail, 
-        subject: 'New Session Request',
-        message: `Hello ${session.tutorName},\n\nYou have received a new session request from a student. Please log in to your account to view the details.\n\nBest regards,\nThe Tutorly Team`,
+        subject: 'Canceled Session alert',
+        message: `Hello ${session.tutorName},\n\n your session with ${session.tutee}. Please log in to your account to view the details.\n\nBest regards,\nThe Tutorly Team`,
       };
       sendSessionCancellationNotification(templateParams);
     setSessions(sessions.map(session => session.id === sessionId ? { ...session, status: 'canceled' } : session));

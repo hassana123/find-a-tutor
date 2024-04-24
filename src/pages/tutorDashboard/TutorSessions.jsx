@@ -14,7 +14,7 @@ const TutorSessions = () => {
   const [filteredSessions, setFilteredSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filter, setFilter] = useState("pending"); // Default filter option
+  const [filter, setFilter] = useState("all"); // Default filter option
   const user = useContext(UserContext);
   const tutorId = user?.id;
 

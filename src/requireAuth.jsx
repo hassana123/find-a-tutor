@@ -48,8 +48,8 @@ function requireAuth(WrappedComponent, isTutorDashboard = false) {
         }, [navigate, isTutorDashboard, user, userDeet]); 
 
 
-        if (loading || !userDataFetched) {
-            return <p className="text-center mt-8 text-gray-700">Loading...</p>;
+        if (loading) {
+            return <p className="text-center mt-8 text-red-700">Loading...</p>;
         } else {
             return <WrappedComponent {...props}/>;
         }

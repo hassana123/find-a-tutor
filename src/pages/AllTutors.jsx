@@ -38,7 +38,7 @@ const AllTutors = () => {
           <div className='grid my-10 justify-center   md:grid-cols-2 gap-5 lg:grid-cols-3'>
             {allTutors.map((tutor, index) => (
               <div className='bg-white w-[100%] rounded-md px-1 pt-2 pb-4 my-5 md:my-0' key={index}>
-                <img src={tutor?.image || tutorI} alt="Tutor" />
+                <img src={tutor?.image || tutorI} alt="Tutor" className='h-[25vh] w-full'/>
                 <small className='text-[11px] bg-[rgba(241,62,62,0.2)] text-[#F13E3E] px-2 py-1 rounded-[20px] inline-block my-2'>{tutor.department}</small>
                 <h1 className='font-semibold text-[18px] mb-1'>{tutor.name}</h1>
                 <p className='my-2'><small className='font-semibold'>Availability:</small> <small className='text-[12px]'>{tutor.availability}</small></p>
