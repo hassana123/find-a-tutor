@@ -45,8 +45,8 @@ const navigate = useNavigate();
 
   const user = useContext(UserContext);
   const userId = user.id;
-  const handleRequestSubmit = async (event) => {
-    event.preventDefault();
+  const handleRequestSubmit = async (e) => {
+    e.preventDefault();
     try {
       setSending(true);
 
@@ -54,6 +54,7 @@ const navigate = useNavigate();
       const userSessionRef = await addDoc(collection(db, `users/${userId}/sessions`), {
         tutorId: id,
         tutorName: tutor.name,
+        tutorEmail: tutor.email,
         requestMessage: requestMessage,
         date: selectedDate,
         time: selectedTime,
@@ -63,8 +64,9 @@ const navigate = useNavigate();
 
       const tutorSessionRef = doc(db, `tutors/${id}/sessions`, userSessionRef.id);
     await setDoc(tutorSessionRef, {
-      userId: userId,
+      tuteeId: userId,
       tutee: user.name,
+      tuteeEmail: user.email,
       requestMessage: requestMessage,
       date: selectedDate,
       time: selectedTime,

@@ -214,7 +214,6 @@ const Sessions = () => {
     <button onClick={() => handleSetReminder(session)} className="bg-green-500 text-white px-3 py-2 rounded-md flex items-center gap-2">
       Add to Calendar
     </button>
-    {supaSession?<></>:<button onClick={()=>googleSignIn()}>Sign In with Google</button>}
   </div>
 )}
 
@@ -222,7 +221,7 @@ const Sessions = () => {
                 <div className='flex justify-between my-3'>
                 <p className="text-gray-600 ">Status: {session.status}</p>
                 <div className="flex justify-end ">
-                 {session.status!=="rejected"? <button onClick={() => handleCancel(session.id, session.tutorId)} className="text-red-500 flex items-center gap-2">
+                 {session.status!=="rejected" || session.status !== "canceled"? <button onClick={() => handleCancel(session.id, session.tutorId)} className="text-red-500 flex items-center gap-2">
                     <FiXCircle /> Cancel
                   </button>:""}
                 {session.status==="rejected"?  <button onClick={() => handleDelete(session.id)} className="text-red-500 flex items-center gap-2">
