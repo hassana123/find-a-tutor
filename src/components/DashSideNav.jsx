@@ -107,13 +107,15 @@ const DashSideNav = ({ show }) => {
 
       {/**desktop nav */}
       <nav className='bg-white py-10 w-[25%] md:block hidden'>
+        <NavLink to="/">
         <div className='flex justify-between items-center mx-5'>
-          <div className='flex gap-3 itemscenter'>
+          <div className='flex gap-2 items-center'>
             <img className='p-1 rounded-[50%] bg-[#F13E3E]' src={star} alt="" />
             <h1 className='text-[18px] shadow-sm  text-[#F13E3E] font-bold'>Tutorly</h1>
           </div>
           <IoEllipsisVertical onClick={() => setOpen(!open)} className='cursor-pointer hover:text-[#F13E3E]' />
         </div>
+        </NavLink>
         {open ? (
           <div className='absolute bg-white shadow-lg  lg:left-[6%] py-5 px-3'>
             <h1 className='font-semibold text-[14px] mt-10 mb-3'> {user?.isTutor ? "" : "Become A Tutor"}</h1>

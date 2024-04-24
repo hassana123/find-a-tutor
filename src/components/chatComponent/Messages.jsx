@@ -10,7 +10,7 @@ const Messages = () => {
   const combinedId = localStorage.getItem("combinedId");
  
   useEffect(() => {
-    const unSub = onSnapshot(doc(db, "chats", combinedId), (doc) => {
+    const unSub = onSnapshot(doc(db, "chats", data.chatId), (doc) => {
       doc.exists() && setMessages(doc.data());
     });
 

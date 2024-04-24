@@ -59,11 +59,10 @@ const SearchComponent = () => {
 
       {/* Display filtered tutors */}
       {filteredTutors.length > 0 && (
-        <div className="mt-4">
-          <h1 className="text-xl font-bold">Filtered Tutors:</h1>
+        <div className="mt-10">
           <ul>
             {filteredTutors.map(tutor => (
-             <div   className='absolute  left-[27%]  bg-white w-[30%] rounded-md px-1 pt-2 pb-4 my-5 md:my-0' key={tutor.id}>
+             <div   className='absolute left-4 md:left-[27%]  bg-white w-[90%]  md:w-[30%] rounded-md px-1 pt-2 pb-4 my-5 md:my-0' key={tutor.id}>
              <img src={tutor?.image || ""} alt="Tutor" />
              <small className='text-[11px] bg-[rgba(241,62,62,0.2)] text-[#F13E3E] px-2 py-1 rounded-[20px] inline-block my-2'>{tutor.department}</small>
              <h1 className='font-semibold text-[18px] mb-1'>{tutor.name}</h1>
