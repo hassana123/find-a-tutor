@@ -18,6 +18,7 @@ export const UserProvider = ({ children }) => {
         if (userDoc.exists()) {
           setUser({ ...userDoc.data(), id: userDoc.id });
           setLoading(false);
+          return;
         }
       }else{
         setLoading(false);
@@ -28,10 +29,11 @@ export const UserProvider = ({ children }) => {
     fetchUserData();
   }, [user]);
    console.log(user);
+   console.log(loading);
 
   return (
     <UserContext.Provider value={user}>
-      {loading  || user !=null? (
+      {loading? (
       
         <p className='text-center text-[25px] my-5'>Loading...</p>
       ) : (
