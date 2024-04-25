@@ -29,7 +29,7 @@ const navigate = useNavigate();
         if (tutorDoc.exists()) {
           setTutor( {id: tutorDoc.id,
             ...tutorDoc.data()});
-setLoaading(false);
+setLoading(false);
         } else {
           setError('Tutor not found');
 setLoading(false):
