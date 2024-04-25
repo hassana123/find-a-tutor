@@ -29,10 +29,9 @@ const navigate = useNavigate();
         if (tutorDoc.exists()) {
           setTutor( {id: tutorDoc.id,
             ...tutorDoc.data()});
-setLoading(false);
+          setLoading(false);
         } else {
           setError('Tutor not found');
-setLoading(false):
         }
       } catch (error) {
         setError('Error fetching tutor details');
