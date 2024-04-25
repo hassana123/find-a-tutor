@@ -46,7 +46,7 @@ function requireAuth(WrappedComponent, isTutorDashboard = false) {
             };
 
             checkAuth();
-        }, [navigate, isTutorDashboard, user, userDeet]); 
+        }, [navigate, isTutorDashboard, user, userId]); 
 
 
         if (loading) {
