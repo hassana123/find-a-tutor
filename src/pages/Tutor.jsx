@@ -29,8 +29,10 @@ const navigate = useNavigate();
         if (tutorDoc.exists()) {
           setTutor( {id: tutorDoc.id,
             ...tutorDoc.data()});
+setLoaading(false);
         } else {
           setError('Tutor not found');
+setLoading(false):
         }
       } catch (error) {
         setError('Error fetching tutor details');
@@ -41,7 +43,7 @@ const navigate = useNavigate();
     };
 
     fetchTutor();
-  }, [id]);
+  }, [id, navigate]);
 
   const {user} = useContext(UserContext);
   const userId = user.id;
