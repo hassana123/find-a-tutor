@@ -8,7 +8,7 @@ import { UserContext} from "./UserContext";
 export const ChatContext = createContext();
 
 export const ChatContextProvider = ({ children }) => {
-  const  user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   const INITIAL_STATE = {
     chatId: "null",
     chatUser: {},

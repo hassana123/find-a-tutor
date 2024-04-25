@@ -14,7 +14,7 @@ function TutorApplication() {
   const dispatch = useDispatch();
  //const userL = JSON.parse(localStorage.getItem("userTutorly")) || JSON.parse(sessionStorage.getItem("userTutorly"))
 
-const user = useContext(UserContext);
+const {user} = useContext(UserContext);
 //console.log(userContext);
   const formData = useSelector((state) => state.application);
   const [selectedCourses, setSelectedCourses] = useState([]);

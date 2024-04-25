@@ -20,7 +20,7 @@ const Search = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [err, setErr] = useState(false);
 
-  const user  = useContext(UserContext);
+  const {user}  = useContext(UserContext);
   const { dispatch } = useContext(ChatContext);
 //console.log(user);
   useEffect(() => {

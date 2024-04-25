@@ -3,7 +3,7 @@ import { UserContext } from "../../UserContext";
 import { ChatContext } from "../../ChatContext";
 
 const Message = ({ message }) => {
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   const { data } = useContext(ChatContext);
   const ref = useRef();
 

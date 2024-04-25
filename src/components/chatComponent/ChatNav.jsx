@@ -4,7 +4,7 @@ import { UserContext } from '../../UserContext'
 import { FiUser } from 'react-icons/fi'
 
 const ChatNav = () => {
-  const user = useContext(UserContext)
+  const {user} = useContext(UserContext)
   return (
     <div className='grid grid-cols-2 items-center  mt-3 text-[#F13E3E]'>
      {/* <div className='flex justify-between my-5 items-center mx-5 '>

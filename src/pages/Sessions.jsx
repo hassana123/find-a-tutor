@@ -29,7 +29,7 @@ const Sessions = () => {
   const [sessionHeld, setSessionHeld] = useState(null);
   const [showFeedbackPrompt, setShowFeedbackPrompt] = useState(false);
    const [filter, setFilter] = useState("all"); // Default filter option
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   const userId = user?.id;
 
   useEffect(() => {
@@ -221,7 +221,7 @@ const Sessions = () => {
                 <div className='flex justify-between my-3'>
                 <p className="text-gray-600 ">Status: {session.status}</p>
                 <div className="flex justify-end ">
-                 {session.status!=="rejected" || session.status !== "canceled"? <button onClick={() => handleCancel(session.id, session.tutorId)} className="text-red-500 flex items-center gap-2">
+                 {session.status !=="rejected" && session.status !== "canceled"? <button onClick={() => handleCancel(session.id, session.tutorId)} className="text-red-500 flex items-center gap-2">
                     <FiXCircle /> Cancel
                   </button>:""}
                 {session.status==="rejected"?  <button onClick={() => handleDelete(session.id)} className="text-red-500 flex items-center gap-2">

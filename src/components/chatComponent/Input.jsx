@@ -19,8 +19,9 @@ const Input = () => {
   const [text, setText] = useState("");
   const [img, setImg] = useState(null);
 
-  const  user  = useContext(UserContext);
+  const  {user}  = useContext(UserContext);
   const { data } = useContext(ChatContext);
+  console.log(data.chatUser)
 //console.log(data)
   const handleSend = async () => {
     if (img) {
@@ -68,7 +69,7 @@ const Input = () => {
     }, { merge: true });
     
     // Update chat user's chat document
-    await updateDoc(doc(db, `/users/${data.chatUser.uid}/userChats`, data.chatUser.uid), {
+    await updateDoc(doc(db, `/users/${data.chatUser.id}/userChats`, data.chatUser.id), {
       [`userInfo.lastMessage`]: lastMessageData,
     }, { merge: true });
     

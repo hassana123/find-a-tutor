@@ -8,7 +8,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); // Introduce loading state
   const userId = JSON.parse(localStorage.getItem("userTutorly"))?.uid || JSON.parse(sessionStorage.getItem("userTutorly"))?.uid;
- console.log(JSON.parse(sessionStorage.getItem("userTutorly"))?.uid);
+// console.log(JSON.parse(sessionStorage.getItem("userTutorly"))?.uid);
   useEffect(() => {
    
     const fetchUserData = async () => {
@@ -27,12 +27,12 @@ export const UserProvider = ({ children }) => {
     };
 
     fetchUserData();
-  }, [user]);
-   console.log(user);
-   console.log(loading);
+  }, [userId,user]);
+   //console.log(user);
+  // console.log(loading);
 
   return (
-    <UserContext.Provider value={user}>
+    <UserContext.Provider  value={{user, loading}}>
       {loading? (
       
         <p className='text-center text-[25px] my-5'>Loading...</p>

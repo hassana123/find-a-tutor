@@ -8,7 +8,7 @@ import { ChatContext } from "../../ChatContext";
 const Chats = () => {
   const [chats, setChats] = useState([]);
 
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   const { dispatch } = useContext(ChatContext);
 
   useEffect(() => {

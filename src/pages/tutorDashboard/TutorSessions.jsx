@@ -7,7 +7,7 @@ import requireAuth from '../../requireAuth';
 import { UserContext } from "../../UserContext";
 import {BiFilterAlt} from"react-icons/bi"
 import emailjs from "@emailjs/browser";
-
+import CountdownTimer from '../../components/CountDownTimer';
 
 const TutorSessions = () => {
   const [sessions, setSessions] = useState([]);
@@ -15,7 +15,7 @@ const TutorSessions = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filter, setFilter] = useState("all"); // Default filter option
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   const tutorId = user?.id;
 
   useEffect(() => {
@@ -157,6 +157,14 @@ console.log(sessions)
                     {session.status === "rejected" || session.status === "canceled" ? <button onClick={() => handleDelete(session.id)} className="text-red-500 flex items-center gap-2">
                       <FiTrash /> Delete
                     </button> : ""}
+                    {session.status === 'accepted' && (
+  <div>
+    <CountdownTimer scheduledDateTime={`${session.date}T${session.time}`} />
+    <button onClick={() => handleSetReminder(session)} className="bg-green-500 text-white px-3 py-2 rounded-md flex items-center gap-2">
+      Add to Calendar
+    </button>
+  </div>
+)}
                   </div>
                 </div>
               </div>

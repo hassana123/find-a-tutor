@@ -11,7 +11,7 @@ import requireAuth from '../requireAuth';
 
 const EditProfile = () => {
   const dispatch = useDispatch();
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
 
   const [fullName, setFullName] = useState(user?.name || "");
   const [username, setUsername] = useState(user?.username || "");

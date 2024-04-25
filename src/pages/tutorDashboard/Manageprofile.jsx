@@ -17,7 +17,7 @@ const ManageProfile = () => {
   const [error, setError] = useState(null);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const formData = useSelector((state) => state.application);
-const user = useContext(UserContext);
+const {user} = useContext(UserContext);
 //console.log(user);
   useEffect(() => {
     // Fetch tutor's details from the database and set them in the form fields

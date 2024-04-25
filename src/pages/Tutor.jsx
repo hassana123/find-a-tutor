@@ -43,7 +43,7 @@ const navigate = useNavigate();
     fetchTutor();
   }, [id]);
 
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   const userId = user.id;
   const handleRequestSubmit = async (e) => {
     e.preventDefault();

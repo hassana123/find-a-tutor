@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 import { FiBell ,FiPlay, FiMoreVertical } from 'react-icons/fi';
 import stars from "../assets/stars.svg";
 const DashHero = () => {
-    const user = useContext(UserContext);
+    const { user } = useContext(UserContext);
     // console.log(user);
     //console.log(JSON.parse(sessionStorage.getItem("userTutorly")));
   return (

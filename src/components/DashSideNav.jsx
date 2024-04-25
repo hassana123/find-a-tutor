@@ -15,7 +15,7 @@ const DashSideNav = ({ show }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [deleteAccount, setDeleteAccount] = useState(false);
-  const user = useContext(UserContext);
+  const {user} = useContext(UserContext);
   const { data } = useContext(ChatContext);
 
   const getGreetingMessage = () => {

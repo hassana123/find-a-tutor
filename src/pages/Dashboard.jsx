@@ -8,7 +8,7 @@ import TutorDashboard from '../components/TutorDashboard';
 import { UserContext } from '../UserContext';
 import { useContext } from 'react';
 const Dashboard = () => {
-  const user =useContext( UserContext)
+  const {user} =useContext( UserContext)
   return (
     <DashboardLayout>
    <SearchComponent/>
