@@ -54,8 +54,11 @@ const LoginPage = () => {
       }
       if (rememberMe) {
         localStorage.setItem('userTutorly', JSON.stringify(userCredential.user));
+        localStorage.setItem('userTutorlyId', JSON.stringify(userCredential.user.uid));
+
       } else {
         sessionStorage.setItem('userTutorly', JSON.stringify(userCredential.user));
+        localStorage.setItem('userTutorlyId', JSON.stringify(userCredential.user.uid));
         localStorage.removeItem('userTutorly');
       }
       const userDocRef = doc(db, "users", userCred.uid);

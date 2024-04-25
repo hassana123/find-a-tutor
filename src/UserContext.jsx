@@ -8,6 +8,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); // Introduce loading state
   const userId = JSON.parse(localStorage.getItem("userTutorly"))?.uid || JSON.parse(sessionStorage.getItem("userTutorly"))?.uid;
+ console.log(JSON.parse(sessionStorage.getItem("userTutorly"))?.uid);
   useEffect(() => {
    
     const fetchUserData = async () => {
@@ -17,22 +18,24 @@ export const UserProvider = ({ children }) => {
         if (userDoc.exists()) {
           setUser({ ...userDoc.data(), id: userDoc.id });
           setLoading(false);
-          return;
         }
+      }else{
+        setLoading(false);
       }
-       // Update loading state once user data is fetched
+     
     };
 
     fetchUserData();
-  }, [user, userId]);
-//  console.log(user);
+  }, [user]);
+   console.log(user);
 
   return (
     <UserContext.Provider value={user}>
-      {!loading ? ( // Conditional rendering based on loading state
-        children // Render children when loading is false
+      {loading  || user !=null? (
+      
+        <p className='text-center text-[25px] my-5'>Loading...</p>
       ) : (
-        <p className='text-center text-[25px] my-5'>Loading...</p> // Render loading indicator when loading is true
+        children 
       )}
     </UserContext.Provider>
   );

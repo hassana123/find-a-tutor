@@ -10,14 +10,14 @@ function requireAuth(WrappedComponent, isTutorDashboard = false) {
         const navigate = useNavigate();
         const [loading, setLoading] = useState(true);
         const [userDataFetched, setUserDataFetched] = useState(false); // Track whether user data has been fetched
-        const userDeet = JSON.parse(localStorage.getItem("userTutorly")) || JSON.parse(sessionStorage.getItem("userTutorly"));
+        const userId = JSON.parse(localStorage.getItem("userTutorlyId")) || JSON.parse(sessionStorage.getItem("userTutorlyId"));
             
         useEffect(() => {
                   
             const checkAuth = async () => {
                 try {
                    
-                    if (!userDeet) {
+                    if (!userId) {
                         navigate("/login");
                         setLoading(false);
                         return;
@@ -41,6 +41,7 @@ function requireAuth(WrappedComponent, isTutorDashboard = false) {
                 } catch (error) {
                     console.error("Error checking authentication:", error);
                     navigate("/login");
+                    setLoading(false)
                 }
             };
 
